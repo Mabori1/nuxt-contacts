@@ -1,16 +1,9 @@
+import type { User } from "~/types";
+import { generateUsers } from "~/utils";
+
 export const useUserStore = defineStore("user", () => {
   //define store
-  const user: Ref<{
-    id: number;
-    name: string;
-    email: string;
-    birthday: string;
-  } | null> = ref({
-    id: 1,
-    name: "John Doe",
-    email: "3yPZw@example.com",
-    birthday: "2000-01-01",
-  });
+  const users: Ref<User[] | undefined> = ref(generateUsers());
   const title = ref("");
   const isVisibleDrawer = ref(false);
   const search = ref("");
@@ -33,7 +26,7 @@ export const useUserStore = defineStore("user", () => {
   };
 
   return {
-    user,
+    users,
     toggleDrawer,
     search,
     isVisibleDrawer,

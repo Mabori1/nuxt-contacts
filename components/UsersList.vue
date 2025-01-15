@@ -1,6 +1,6 @@
 <template>
   <VMain>
-    <v-data-iterator :items="items" :page="page">
+    <v-data-iterator :items="users" :page="page">
       <template v-slot:default="{ items }">
         <template v-for="(item, i) in items" :key="i">
           <v-card :color="color" class="mx-auto my-0">
@@ -18,7 +18,7 @@
     <div class="text-center">
       <v-pagination
         v-model="page"
-        :length="15"
+        :length="20"
         :total-visible="5"
         elevation="1"
       ></v-pagination>
@@ -27,20 +27,10 @@
 </template>
 
 <script lang="ts" setup>
-import { fakerRU as faker } from "@faker-js/faker";
 const color = ref("indigo");
 const page = ref(1);
-const items = Array.from({ length: 100 }, (k, v) => ({
-  id: v + 1,
-  name: faker.person.fullName(),
-  email: faker.internet.email(),
-  phone: faker.phone.number({ style: "national" }),
-  birthDate: new Date(faker.date.birthdate()).toLocaleString("ru-RU", {
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-  }),
-}));
+
+const { users } = storeToRefs(useUserStore());
 </script>
 
 <style></style>

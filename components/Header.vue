@@ -6,7 +6,7 @@
       prominent
     >
       <v-app-bar-nav-icon
-        @click="useUserStore().toggleDrawer()"
+        @click="useUserStore().toggleDrawer"
       ></v-app-bar-nav-icon>
 
       <v-toolbar-title>Контакты</v-toolbar-title>
@@ -22,12 +22,6 @@
         hide-details
         class="opacity-40"
       ></v-text-field>
-      <!-- <v-text-field -->
-      <!--   hide-details -->
-      <!--   single-line -->
-      <!--   v-model="search" -->
-      <!--   placeholder="Поиск" -->
-      <!-- ></v-text-field> -->
       <v-spacer></v-spacer>
     </v-toolbar>
   </div>
