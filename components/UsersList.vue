@@ -1,6 +1,9 @@
 <template>
   <VMain>
-    <v-data-iterator :items="users" :page="page">
+    <v-data-iterator
+      :items="search.length > 2 ? searchResult : users"
+      :page="page"
+    >
       <template v-slot:default="{ items }">
         <template v-for="(item, i) in items" :key="i">
           <v-card :color="color" class="mx-auto my-0">
@@ -21,16 +24,37 @@
         :length="20"
         :total-visible="5"
         elevation="1"
+        v-if="users?.length && searchResult?.length"
       ></v-pagination>
+      <div v-else>Пользователи не найдены</div>
     </div>
   </VMain>
 </template>
 
 <script lang="ts" setup>
+import type { User } from "~/types";
+
 const color = ref("indigo");
 const page = ref(1);
+const { users, search } = storeToRefs(useUserStore());
+const searchResult = ref<User[] | undefined>([]);
 
-const { users } = storeToRefs(useUserStore());
+watch(search, async (newSearch) => {
+  if (newSearch.length > 2) {
+    await nextTick(() => {
+      searchResult.value = users.value?.filter((user) => {
+        return (
+          user.name.toLowerCase().includes(newSearch.toLowerCase()) ||
+          user.email.toLowerCase().includes(newSearch.toLowerCase()) ||
+          user.phone.toLowerCase().includes(newSearch.toLowerCase()) ||
+          user.birthDate.toLowerCase().includes(newSearch.toLowerCase())
+        );
+      });
+    });
+  }
+  console.log(searchResult.value);
+  console.log(newSearch, search.value);
+});
 </script>
 
 <style></style>
