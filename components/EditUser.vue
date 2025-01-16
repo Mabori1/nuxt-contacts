@@ -146,16 +146,12 @@ const handleEdit = () => {
     .replace(/[^0-9]/g, "");
   email.value.value = props.editUser.email.toLowerCase();
   birthday.value.value = props.editUser.birthDate;
-
-  console.log(
-    new Date(props.editUser.birthDate.replace(/\./, "-")).toISOString(),
-  );
 };
 
 const onSubmit = handleSubmit((values) => {
   if (users?.value?.length !== undefined) {
-    const newUser = {
-      id: users.value.length + 1,
+    const editCurrentUser = {
+      id: props.editUser.id,
       name: values.name,
       phone: `+${values.phone}`,
       email: values.email,
@@ -168,7 +164,7 @@ const onSubmit = handleSubmit((values) => {
         .toString(),
     };
 
-    useUserStore().addNewUser(newUser);
+    useUserStore().editUser(editCurrentUser);
   }
 });
 </script>

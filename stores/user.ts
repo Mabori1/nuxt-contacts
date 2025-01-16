@@ -26,7 +26,11 @@ export const useUserStore = defineStore("user", () => {
 
   const deleteUser = (user: User) => {
     users.value = users.value?.filter((u) => u.id !== user.id);
-    console.log(users.value);
+  };
+
+  const editUser = (user: User) => {
+    const index = users.value?.findIndex((u) => u.id === user.id);
+    users.value![index!] = user;
   };
 
   const searchUsers = (search: string) => {
@@ -43,6 +47,7 @@ export const useUserStore = defineStore("user", () => {
     users,
     addNewUser,
     deleteUser,
+    editUser,
     toggleDrawer,
     search,
     isVisibleDrawer,

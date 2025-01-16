@@ -5,7 +5,10 @@ export const generateUsers = () => {
     id: v + 1,
     name: faker.person.fullName(),
     email: faker.internet.email(),
-    phone: faker.phone.number({ style: "national" }).toString(),
+    phone: faker.phone
+      .number({ style: "national" })
+      .toString()
+      .replace(/^8/, "+7"),
     birthDate: new Date(faker.date.birthdate())
       .toLocaleString("lt", {
         year: "numeric",
