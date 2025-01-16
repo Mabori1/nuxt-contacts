@@ -11,6 +11,10 @@
 
       <v-toolbar-title>Контакты</v-toolbar-title>
 
+      <!-- <VBtn variant="tonal" color="black" text="Создать контакт"></VBtn> -->
+      <AddUser />
+
+      <v-spacer></v-spacer>
       <v-text-field
         v-model="search"
         density="comfortable"

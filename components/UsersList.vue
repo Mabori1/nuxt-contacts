@@ -1,13 +1,22 @@
 <template>
-  <v-data-iterator
-    :items="search.length > 2 ? searchResult : users"
-    :page="page"
-  >
+  <v-data-iterator :items="itemUser" :page="page">
     <template v-slot:default="{ items }">
       <template v-for="(item, i) in items" :key="i">
-        <v-card :color="color" class="mx-auto" max-width="500">
+        <v-card
+          :color="color"
+          class="mx-auto position-relative"
+          max-width="500"
+        >
           <v-card-item class="d-flex ml-3">
-            <div>Id: {{ item.raw.id }}</div>
+            <div class="d-flex justify-space-between">
+              Id: {{ item.raw.id }}
+              <v-icon
+                class="position-absolute right-0"
+                @click="useUserStore().deleteUser(item.raw)"
+                color="red"
+                >mdi-delete</v-icon
+              >
+            </div>
             <div class="text-h6">ФИО: {{ item.raw.name }}</div>
             <div>Phone: {{ item.raw.phone }}</div>
             <div>Дата рождения: {{ item.raw.birthDate }}</div>
@@ -41,6 +50,7 @@ const { users, search } = storeToRefs(useUserStore());
 const searchResult = ref<User[] | undefined>([]);
 const isPaginationVisible = ref(true);
 const isUserNotFound = ref(false);
+let itemUser = search.value.length > 2 ? searchResult.value : users.value;
 
 watch(search, async (newSearch) => {
   if (newSearch.length > 2) {
@@ -55,12 +65,14 @@ watch(search, async (newSearch) => {
         );
       });
     });
-    isPaginationVisible.value = paginationShow();
   }
+  isPaginationVisible.value = paginationShow();
 });
 
 onMounted(() => updateTotalPages());
-onUpdated(() => (isUserNotFound.value = isUserNotFoundShow()));
+onUpdated(() => {
+  isUserNotFound.value = isUserNotFoundShow();
+});
 
 const paginationShow = () => {
   if (

@@ -20,6 +20,15 @@ export const useUserStore = defineStore("user", () => {
     isVisibleDrawer.value = !isVisibleDrawer.value;
   };
 
+  const addNewUser = (user: User) => {
+    users.value?.push(user);
+  };
+
+  const deleteUser = (user: User) => {
+    users.value = users.value?.filter((u) => u.id !== user.id);
+    console.log(users.value);
+  };
+
   const searchUsers = (search: string) => {
     if (search.length > 2) {
       users.value = users.value?.filter((user) => {
@@ -32,6 +41,8 @@ export const useUserStore = defineStore("user", () => {
 
   return {
     users,
+    addNewUser,
+    deleteUser,
     toggleDrawer,
     search,
     isVisibleDrawer,
