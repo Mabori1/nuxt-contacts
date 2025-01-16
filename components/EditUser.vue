@@ -166,5 +166,6 @@ const onSubmit = handleSubmit((values) => {
 
     useUserStore().editUser(editCurrentUser);
   }
+  dialog.value = false;
 });
 </script>

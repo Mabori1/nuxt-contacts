@@ -150,6 +150,7 @@ const onSubmit = handleSubmit((values) => {
     };
 
     useUserStore().addNewUser(newUser);
+    console.log(users.value);
   }
 });
 </script>

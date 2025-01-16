@@ -4,7 +4,7 @@
       <template v-for="(item, i) in items" :key="i">
         <v-card :color="color" class="mx-auto" max-width="500">
           <v-card-item class="ml-3">
-            <div class="d-flex border justify-space-between">
+            <div class="d-flex justify-space-between">
               Id: {{ item.raw.id }}
               <EditUser :edit-user="item.raw" />
               <v-icon @click="useUserStore().deleteUser(item.raw)" color="red"
@@ -56,7 +56,7 @@ const { users, search } = storeToRefs(useUserStore());
 const searchResult = ref<User[] | undefined>([]);
 const isPaginationVisible = ref(true);
 const isUserNotFound = ref(false);
-let itemUser = search.value.length > 2 ? searchResult.value : users.value;
+const itemUser = ref<User[] | undefined>();
 
 watch(search, async (newSearch) => {
   if (newSearch.length > 2) {
@@ -75,9 +75,14 @@ watch(search, async (newSearch) => {
   isPaginationVisible.value = paginationShow();
 });
 
-onMounted(() => updateTotalPages());
+onMounted(() => {
+  updateTotalPages();
+  itemUser.value = search.value.length > 2 ? searchResult.value : users.value;
+});
 onUpdated(() => {
   isUserNotFound.value = isUserNotFoundShow();
+  itemUser.value = search.value.length > 2 ? searchResult.value : users.value;
+  updateTotalPages();
 });
 
 const paginationShow = () => {
