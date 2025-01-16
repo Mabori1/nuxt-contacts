@@ -1,29 +1,30 @@
 <template>
-  <div class="pa-4 text-center">
+  <div class="ml-auto mr-3">
     <v-dialog v-model="dialog" max-width="600">
       <template v-slot:activator="{ props: activatorProps }">
-        <v-btn
-          class="text-none font-weight-regular"
-          prepend-icon="mdi-account"
-          text="Создать контакт"
-          variant="elevated"
-          color="primary"
+        <v-icon
+          color="green"
           v-bind="activatorProps"
-        ></v-btn>
+          @click.prevent="handleEdit"
+          >mdi-book-edit-outline</v-icon
+        >
       </template>
 
-      <v-card color="blue" prepend-icon="mdi-account" title="Создание контакта">
+      <v-card
+        color="blue"
+        prepend-icon="mdi-account"
+        title="Редактирование контакта"
+      >
         <v-form @submit.prevent="onSubmit">
           <v-card-text>
             <v-row dense class="d-flex flex-column">
               <v-col cols="12" md="12" sm="6">
                 <v-text-field
                   v-model="name.value.value"
-                  counter="50"
+                  :counter="50"
                   :error-messages="name.errorMessage.value"
                   max-width="500"
                   label="ФИО*"
-                  placeholder="Алексей Иванович Бояров"
                   required
                   clearable
                 ></v-text-field>
@@ -36,7 +37,6 @@
                   :error-messages="phone.errorMessage.value"
                   type="number"
                   label="Телефон*"
-                  placeholder="+79182223344"
                   clearable
                   required
                 ></v-text-field>
@@ -46,10 +46,8 @@
                 <v-text-field
                   v-model="email.value.value"
                   :error-messages="email.errorMessage.value"
-                  label="Email*"
                   type="email"
-                  hint="Введите адрес электронной почты"
-                  placeholder="johndoe@gmail.com"
+                  label="Email*"
                   required
                 ></v-text-field>
               </v-col>
@@ -86,7 +84,7 @@
             <v-btn text="Очистить" variant="plain" @click="handleReset"></v-btn>
             <v-btn
               color="primary"
-              text="Добавить"
+              text="Сохранить"
               variant="tonal"
               @click.prevent="onSubmit"
             ></v-btn>
@@ -99,6 +97,14 @@
 
 <script setup lang="ts">
 import { useField, useForm } from "vee-validate";
+import type { User } from "~/types";
+
+const props = defineProps({
+  editUser: {
+    required: true,
+    type: Object as PropType<User>,
+  },
+});
 
 const { handleSubmit, handleReset } = useForm({
   validationSchema: {
@@ -114,7 +120,7 @@ const { handleSubmit, handleReset } = useForm({
       return "Введите корректный номер телефона.";
     },
     email(value: string) {
-      if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true;
+      if (/^[a-z.-_]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true;
 
       return "Введите корректный адрес почты.";
     },
@@ -133,6 +139,19 @@ const birthday = useField("birthday");
 
 const { users } = storeToRefs(useUserStore());
 
+const handleEdit = () => {
+  name.value.value = props.editUser.name;
+  phone.value.value = props.editUser.phone
+    .replace(/^8/, "7")
+    .replace(/[^0-9]/g, "");
+  email.value.value = props.editUser.email.toLowerCase();
+  birthday.value.value = props.editUser.birthDate;
+
+  console.log(
+    new Date(props.editUser.birthDate.replace(/\./, "-")).toISOString(),
+  );
+};
+
 const onSubmit = handleSubmit((values) => {
   if (users?.value?.length !== undefined) {
     const newUser = {
@@ -141,10 +160,10 @@ const onSubmit = handleSubmit((values) => {
       phone: `+${values.phone}`,
       email: values.email,
       birthDate: new Date(values.birthday)
-        .toLocaleString("ru-RU", {
+        .toLocaleString("lt", {
           year: "numeric",
-          month: "numeric",
-          day: "numeric",
+          month: "2-digit",
+          day: "2-digit",
         })
         .toString(),
     };

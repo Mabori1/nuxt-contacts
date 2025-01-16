@@ -7,10 +7,10 @@ export const generateUsers = () => {
     email: faker.internet.email(),
     phone: faker.phone.number({ style: "national" }).toString(),
     birthDate: new Date(faker.date.birthdate())
-      .toLocaleString("ru-RU", {
+      .toLocaleString("lt", {
         year: "numeric",
-        month: "numeric",
-        day: "numeric",
+        month: "2-digit",
+        day: "2-digit",
       })
       .toString(),
   }));
