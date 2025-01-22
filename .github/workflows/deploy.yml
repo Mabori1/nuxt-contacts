@@ -14,26 +14,26 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      # Выберите свой собственный менеджер пакетов и сценарий сборки
+      # Pick your own package manager and build script
       - run: npm install
       - run: npx nuxt build --preset github_pages
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./.output/public
-  # Задание по развертыванию
+  # Deployment job
   deploy:
-    # Добавьте зависимость в задание сборки
+    # Add a dependency to the build job
     needs: build
-    # Предоставьте GITHUB_TOKEN права, необходимые для развертывания Pages
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
-      pages: write # для развертывания в Pages
-      id-token: write # для проверки того, что развертывание происходит из соответствующего источника
-    # Развертывание в среде github_pages
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+    # Deploy to the github_pages environment
     environment:
       name: github_pages
       url: ${{ steps.deployment.outputs.page_url }}
-    # Определите раннер + шаг развертывания
+    # Specify runner + deployment step
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
