@@ -2,7 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useUserStore } from "~/stores/user";
 
-const { search } = storeToRefs(useUserStore());
+const { search, users } = storeToRefs(useUserStore());
 const router = useRouter();
 </script>
 <template>
@@ -16,7 +16,7 @@ const router = useRouter();
         @click="useUserStore().toggleDrawer"
       ></v-app-bar-nav-icon>
 
-      <v-toolbar-title>Контакты</v-toolbar-title>
+      <v-toolbar-title>Всего контактов: {{ users?.length }}</v-toolbar-title>
 
       <v-btn
         class="text-none font-weight-regular"
@@ -35,7 +35,6 @@ const router = useRouter();
         prepend-inner-icon="mdi-magnify"
         style="max-width: 300px"
         variant="solo"
-        clearable
         hide-details
         class="opacity-40"
       ></v-text-field>

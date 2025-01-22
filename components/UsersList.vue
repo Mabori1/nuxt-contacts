@@ -1,87 +1,55 @@
 <script lang="ts" setup>
+import { storeToRefs } from "pinia";
+import { onMounted, ref, watch } from "vue";
+import { useUserStore } from "~/stores/user";
 import type { User } from "~/types";
 import EditUser from "./EditUser.vue";
-import { nextTick, onMounted, onUpdated, ref, watch } from "vue";
-import { storeToRefs } from "pinia";
-import { useUserStore } from "~/stores/user";
 
 const color = ref("indigo");
-const { isSnackbar, snackbarText, users, search, page, totalPages } =
-  storeToRefs(useUserStore());
-const searchResult = ref<User[] | undefined>([]);
+const {
+  searchUsers,
+  isSnackbar,
+  snackbarText,
+  users,
+  search,
+  page,
+  totalPages,
+} = storeToRefs(useUserStore());
 const isPaginationVisible = ref(true);
-const isUserNotFound = ref(false);
 const itemUsers = ref<User[] | undefined>([]);
 
-watch(search, async (newSearch) => {
+watch(search, (newSearch) => {
   if (newSearch.length > 2) {
-    await nextTick(() => {
-      updateTotalPages();
-      searchResult.value = users.value?.filter((user: User) => {
-        return (
-          user.name.toLowerCase().includes(newSearch.toLowerCase()) ||
-          user.email.toLowerCase().includes(newSearch.toLowerCase()) ||
-          user.phone.toLowerCase().includes(newSearch.toLowerCase()) ||
-          user.birthDate.toLowerCase().includes(newSearch.toLowerCase())
-        );
-      });
-    });
+    searchUsers.value = users.value?.filter(
+      (user: User) =>
+        user.name.toLowerCase().includes(newSearch.toLowerCase()) ||
+        user.email.toLowerCase().includes(newSearch.toLowerCase()) ||
+        user.phone.toLowerCase().includes(newSearch.toLowerCase()) ||
+        user.birthDate.toLowerCase().includes(newSearch.toLowerCase()),
+    );
+    setItemUsers();
   }
-  paginationShow();
+  setItemUsers();
 });
 
-watch(users, (_) => {
-  paginationShow();
+watch(users, () => {
   setItemUsers();
-  updateTotalPages();
+});
+watch(searchUsers, () => {
+  setItemUsers();
 });
 
 onMounted(() => {
-  updateTotalPages();
   setItemUsers();
-});
-onUpdated(() => {
-  isUserNotFoundShow();
-  updateTotalPages();
 });
 
 const setItemUsers = () => {
-  itemUsers.value = search.value.length > 2 ? searchResult.value : users.value;
-};
-
-const paginationShow = () => {
-  if (
-    (users.value?.length !== undefined &&
-      users.value.length <= 5 &&
-      search.value.length < 2) ||
-    (searchResult.value?.length !== undefined &&
-      searchResult.value.length <= 5 &&
-      search.value.length > 2)
-  ) {
+  itemUsers.value = search.value.length > 2 ? searchUsers.value : users.value;
+  if (itemUsers.value?.length) {
+    isPaginationVisible.value = true;
+    totalPages.value = Math.ceil(itemUsers.value.length / 5);
+  } else {
     isPaginationVisible.value = false;
-  }
-  isPaginationVisible.value = true;
-};
-
-const isUserNotFoundShow = () => {
-  if (
-    (users.value?.length !== undefined &&
-      !users.value.length &&
-      search.value.length < 2) ||
-    (searchResult.value?.length !== undefined &&
-      !searchResult.value.length &&
-      search.value.length > 2)
-  ) {
-    return true;
-  }
-  return false;
-};
-
-const updateTotalPages = () => {
-  if (search.value.length > 2 && searchResult.value !== undefined) {
-    totalPages.value = Math.ceil(searchResult.value.length / 5);
-  } else if (users.value !== undefined) {
-    totalPages.value = Math.ceil(users.value.length / 5);
   }
 };
 </script>
@@ -125,11 +93,9 @@ const updateTotalPages = () => {
       :length="totalPages"
       :total-visible="5"
       elevation="1"
-      v-show="isPaginationVisible"
+      v-if="isPaginationVisible"
     ></v-pagination>
-    <div v-if="isUserNotFound" class="text-h5 mt-8">
-      Пользователи не найдены
-    </div>
+    <div v-else class="text-h5 mt-8">Пользователи не найдены</div>
   </div>
 
   <v-snackbar color="green" v-model="isSnackbar" :timeout="3000" class="mb-4">
