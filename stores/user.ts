@@ -5,15 +5,11 @@ export const useUserStore = defineStore("user", () => {
   //define store
   const users: Ref<User[] | undefined> = ref(generateUsers());
   const isVisibleDrawer = ref(false);
+  const page = ref(1);
+  const totalPages = ref(0);
   const search = ref("");
-
-  // getters
-  // const greetTitle = computed(() => {
-  //   if (!title.value) {
-  //     return "Hello";
-  //   }
-  //   return `Hello ${title.value}`;
-  // });
+  const isSnackbar = ref(false);
+  const snackbarText = ref("");
 
   // actions
   const toggleDrawer = () => {
@@ -26,6 +22,8 @@ export const useUserStore = defineStore("user", () => {
 
   const deleteUser = (user: User) => {
     users.value = users.value?.filter((u) => u.id !== user.id);
+    isSnackbar.value = true;
+    snackbarText.value = "Контакт успешно удален";
   };
 
   const editUser = (user: User) => {
@@ -52,6 +50,10 @@ export const useUserStore = defineStore("user", () => {
     search,
     isVisibleDrawer,
     searchUsers,
+    page,
+    totalPages,
+    isSnackbar,
+    snackbarText,
   };
 });
 

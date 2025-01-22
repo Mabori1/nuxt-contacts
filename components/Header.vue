@@ -1,6 +1,13 @@
+<script lang="ts" setup>
+import { storeToRefs } from "pinia";
+import { useUserStore } from "~/stores/user";
+
+const { search } = storeToRefs(useUserStore());
+const router = useRouter();
+</script>
 <template>
   <div>
-    <v-toolbar
+    <v-app-bar
       image="https://cdn.vuetifyjs.com/images/backgrounds/vbanner.jpg"
       dark
       prominent
@@ -11,8 +18,14 @@
 
       <v-toolbar-title>Контакты</v-toolbar-title>
 
-      <!-- <VBtn variant="tonal" color="black" text="Создать контакт"></VBtn> -->
-      <AddUser />
+      <v-btn
+        class="text-none font-weight-regular"
+        prepend-icon="mdi-account"
+        text="Создать контакт"
+        variant="elevated"
+        color="primary"
+        @click="router.push('/create-user')"
+      ></v-btn>
 
       <v-spacer></v-spacer>
       <v-text-field
@@ -27,12 +40,6 @@
         class="opacity-40"
       ></v-text-field>
       <v-spacer></v-spacer>
-    </v-toolbar>
+    </v-app-bar>
   </div>
 </template>
-
-<script lang="ts" setup>
-const { search } = storeToRefs(useUserStore());
-</script>
-
-<style></style>

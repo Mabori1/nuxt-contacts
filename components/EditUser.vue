@@ -1,3 +1,79 @@
+<script setup lang="ts">
+import { useField, useForm } from "vee-validate";
+import type { User } from "~/types";
+
+const props = defineProps({
+  editUser: {
+    required: true,
+    type: Object as PropType<User>,
+  },
+});
+
+const { handleSubmit, handleReset } = useForm({
+  validationSchema: {
+    name(value: string) {
+      if (value?.length >= 10 && /^[А-ЯЁа-яёA-Za-z '-]+$/.test(value))
+        return true;
+
+      return "ФИО должно содержать минимум 10 символов.";
+    },
+    phone(value: string) {
+      if (/^[0-9-+]{11,}$/.test(value)) return true;
+
+      return "Введите корректный номер телефона.";
+    },
+    email(value: string) {
+      if (/^[a-z.-_]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true;
+
+      return "Введите корректный адрес почты.";
+    },
+    birthday(value: string) {
+      if (/^[0-9-]{10,}$/.test(value)) return true;
+
+      return "Введите корректную дату рождения";
+    },
+  },
+});
+const dialog = shallowRef(false);
+const name = useField("name");
+const phone = useField("phone");
+const email = useField("email");
+const birthday = useField("birthday");
+
+const { users, isSnackbar, snackbarText } = storeToRefs(useUserStore());
+
+const handleEdit = () => {
+  name.value.value = props.editUser.name;
+  phone.value.value = props.editUser.phone
+    .replace(/^8/, "7")
+    .replace(/[^0-9]/g, "");
+  email.value.value = props.editUser.email.toLowerCase();
+  birthday.value.value = props.editUser.birthDate;
+};
+
+const onSubmit = handleSubmit((values) => {
+  if (users?.value?.length !== undefined) {
+    const editCurrentUser = {
+      id: props.editUser.id,
+      name: values.name,
+      phone: `+${values.phone}`,
+      email: values.email,
+      birthDate: new Date(values.birthday)
+        .toLocaleString("lt", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        })
+        .toString(),
+    };
+
+    useUserStore().editUser(editCurrentUser);
+  }
+  dialog.value = false;
+  snackbarText.value = "Контакт успешно отредактирован";
+  isSnackbar.value = true;
+});
+</script>
 <template>
   <div class="ml-auto mr-3">
     <v-dialog v-model="dialog" max-width="600">
@@ -94,78 +170,3 @@
     </v-dialog>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useField, useForm } from "vee-validate";
-import type { User } from "~/types";
-
-const props = defineProps({
-  editUser: {
-    required: true,
-    type: Object as PropType<User>,
-  },
-});
-
-const { handleSubmit, handleReset } = useForm({
-  validationSchema: {
-    name(value: string) {
-      if (value?.length >= 10 && /^[А-ЯЁа-яёA-Za-z '-]+$/.test(value))
-        return true;
-
-      return "ФИО должно содержать минимум 10 символов.";
-    },
-    phone(value: string) {
-      if (/^[0-9-+]{11,}$/.test(value)) return true;
-
-      return "Введите корректный номер телефона.";
-    },
-    email(value: string) {
-      if (/^[a-z.-_]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true;
-
-      return "Введите корректный адрес почты.";
-    },
-    birthday(value: string) {
-      if (/^[0-9-]{10,}$/.test(value)) return true;
-
-      return "Введите корректную дату рождения";
-    },
-  },
-});
-const dialog = shallowRef(false);
-const name = useField("name");
-const phone = useField("phone");
-const email = useField("email");
-const birthday = useField("birthday");
-
-const { users } = storeToRefs(useUserStore());
-
-const handleEdit = () => {
-  name.value.value = props.editUser.name;
-  phone.value.value = props.editUser.phone
-    .replace(/^8/, "7")
-    .replace(/[^0-9]/g, "");
-  email.value.value = props.editUser.email.toLowerCase();
-  birthday.value.value = props.editUser.birthDate;
-};
-
-const onSubmit = handleSubmit((values) => {
-  if (users?.value?.length !== undefined) {
-    const editCurrentUser = {
-      id: props.editUser.id,
-      name: values.name,
-      phone: `+${values.phone}`,
-      email: values.email,
-      birthDate: new Date(values.birthday)
-        .toLocaleString("lt", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        })
-        .toString(),
-    };
-
-    useUserStore().editUser(editCurrentUser);
-  }
-  dialog.value = false;
-});
-</script>

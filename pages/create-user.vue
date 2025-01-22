@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 useSeoMeta({
-  title: "Контакты",
+  title: "Добавление контакта",
 });
 </script>
 <template>
-  <UsersList />
+  <AddUser />
 </template>
