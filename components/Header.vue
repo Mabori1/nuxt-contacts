@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
+import { useDisplay } from "vuetify";
 import { useUserStore } from "~/stores/user";
 
 const { search, users } = storeToRefs(useUserStore());
 const router = useRouter();
+const { mdAndUp } = useDisplay();
 </script>
 <template>
   <div>
@@ -11,18 +13,35 @@ const router = useRouter();
       image="https://cdn.vuetifyjs.com/images/backgrounds/vbanner.jpg"
       dark
       prominent
+      elevation="8"
+      class="d-flex flex-wrap"
     >
       <v-app-bar-nav-icon
         @click="useUserStore().toggleDrawer"
       ></v-app-bar-nav-icon>
 
-      <v-toolbar-title>Всего контактов: {{ users?.length }}</v-toolbar-title>
+      <v-toolbar-title>
+        {{
+          mdAndUp ? `Контакты: ${users?.length}` : users?.length
+        }}</v-toolbar-title
+      >
 
       <v-btn
+        v-if="mdAndUp"
         class="text-none font-weight-regular"
         prepend-icon="mdi-account"
-        text="Создать контакт"
-        variant="elevated"
+        text="Добавить контакт"
+        variant="flat"
+        color="primary"
+        @click="router.push('/create-user')"
+      ></v-btn>
+
+      <v-btn
+        v-else
+        class="text-none font-weight-regular"
+        prepend-icon="mdi-account"
+        text="+"
+        variant="flat"
         color="primary"
         @click="router.push('/create-user')"
       ></v-btn>

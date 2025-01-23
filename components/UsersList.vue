@@ -56,9 +56,19 @@ const setItemUsers = () => {
 
 <template>
   <v-data-iterator :items="itemUsers" :page="page">
-    <template v-slot:default="{ items }">
+    <template
+      v-slot:default="{ items }"
+      class="d-flex items-center flex-column"
+    >
       <template v-for="(item, i) in items" :key="i">
-        <v-card :color="color" class="mx-auto" max-width="500">
+        <v-card
+          :color="color"
+          class="mx-auto p-4"
+          min-width="300"
+          max-width="500"
+          border
+          elevation="8"
+        >
           <v-card-item class="ml-3">
             <div class="d-flex justify-space-between">
               Id: {{ item.raw.id }}
@@ -92,8 +102,9 @@ const setItemUsers = () => {
       v-model="page"
       :length="totalPages"
       :total-visible="5"
-      elevation="1"
+      elevation="3"
       v-if="isPaginationVisible"
+      size="small"
     ></v-pagination>
     <div v-else class="text-h5 mt-8">Пользователи не найдены</div>
   </div>

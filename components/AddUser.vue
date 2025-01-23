@@ -62,9 +62,9 @@ const onSubmit = handleSubmit((values) => {
 </script>
 <template>
   <v-card
-    class="mx-auto"
+    class="mx-auto px-8"
     color="blue"
-    width="600"
+    max-width="600"
     prepend-icon="mdi-account"
     title="Создание контакта"
   >
@@ -130,21 +130,21 @@ const onSubmit = handleSubmit((values) => {
       <v-divider></v-divider>
 
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <div class="d-flex flex-wrap mx-auto justify-center">
+          <v-btn
+            text="Отменить"
+            variant="plain"
+            @click="router.push('/')"
+          ></v-btn>
 
-        <v-btn
-          text="Отменить"
-          variant="plain"
-          @click="router.push('/')"
-        ></v-btn>
-
-        <v-btn text="Очистить" variant="plain" @click="handleReset"></v-btn>
-        <v-btn
-          color="primary"
-          text="Добавить"
-          variant="tonal"
-          @click.prevent="onSubmit"
-        ></v-btn>
+          <v-btn text="Очистить" variant="plain" @click="handleReset"></v-btn>
+          <v-btn
+            color="primary"
+            text="Добавить"
+            variant="tonal"
+            @click.prevent="onSubmit"
+          ></v-btn>
+        </div>
       </v-card-actions>
     </v-form>
   </v-card>
