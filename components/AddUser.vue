@@ -10,7 +10,7 @@ const { handleSubmit, handleReset } = useForm({
       return "ФИО должно содержать минимум 10 символов.";
     },
     phone(value: string) {
-      if (/^[0-9-+]{11,}$/.test(value)) return true;
+      if (/^[0-9+]{11,}$/.test(value)) return true;
 
       return "Введите корректный номер телефона.";
     },
@@ -61,91 +61,94 @@ const onSubmit = handleSubmit((values) => {
 });
 </script>
 <template>
-  <v-card
-    class="mx-auto px-8"
-    color="blue"
-    max-width="600"
-    prepend-icon="mdi-account"
-    title="Создание контакта"
-  >
-    <v-form @submit.prevent="onSubmit">
-      <v-card-text>
-        <v-row dense class="d-flex flex-column">
-          <v-col cols="12" md="12" sm="6">
-            <v-text-field
-              v-model="name.value.value"
-              counter="50"
-              :error-messages="name.errorMessage.value"
-              max-width="500"
-              label="ФИО*"
-              placeholder="Алексей Иванович Бояров"
-              required
-              clearable
-            ></v-text-field>
-          </v-col>
+  <div class="d-flex justify-center">
+    <v-card
+      class="mx-4 px-2"
+      color="blue"
+      width="500"
+      prepend-icon="mdi-account"
+      title="Создание контакта"
+      elevation="8"
+    >
+      <v-form @submit.prevent="onSubmit">
+        <v-card-text>
+          <v-row dense class="d-flex flex-column">
+            <v-col cols="12" md="12" sm="10">
+              <v-text-field
+                v-model="name.value.value"
+                counter="50"
+                :error-messages="name.errorMessage.value"
+                max-width="500"
+                label="ФИО*"
+                placeholder="Алексей Иванович Бояров"
+                required
+                clearable
+              ></v-text-field>
+            </v-col>
 
-          <v-col cols="12" md="8" sm="6">
-            <v-text-field
-              v-model="phone.value.value"
-              :counter="11"
-              :error-messages="phone.errorMessage.value"
-              type="number"
-              label="Телефон*"
-              placeholder="+79182223344"
-              clearable
-              required
-            ></v-text-field>
-          </v-col>
+            <v-col cols="12" md="8" sm="6">
+              <v-text-field
+                v-model="phone.value.value"
+                :counter="11"
+                :error-messages="phone.errorMessage.value"
+                type="number"
+                label="Телефон*"
+                placeholder="+79182223344"
+                clearable
+                required
+              ></v-text-field>
+            </v-col>
 
-          <v-col cols="12" md="8" sm="6">
-            <v-text-field
-              v-model="email.value.value"
-              :error-messages="email.errorMessage.value"
-              label="Email*"
-              type="email"
-              hint="Введите адрес электронной почты"
-              placeholder="johndoe@gmail.com"
-              required
-            ></v-text-field>
-          </v-col>
+            <v-col cols="12" md="8" sm="6">
+              <v-text-field
+                v-model="email.value.value"
+                :error-messages="email.errorMessage.value"
+                label="Email*"
+                type="email"
+                hint="Введите адрес электронной почты"
+                placeholder="johndoe@gmail.com"
+                required
+              ></v-text-field>
+            </v-col>
 
-          <v-col cols="12" md="5" sm="6">
-            <v-text-field
-              v-model="birthday.value.value"
-              :counter="10"
-              :error-messages="birthday.errorMessage.value"
-              label="Дата рождения*"
-              type="date"
-              required
-              clearable
-            ></v-text-field>
-          </v-col>
-        </v-row>
+            <v-col cols="12" md="5" sm="6">
+              <v-text-field
+                v-model="birthday.value.value"
+                :counter="10"
+                :error-messages="birthday.errorMessage.value"
+                label="Дата рождения*"
+                type="date"
+                required
+                clearable
+              ></v-text-field>
+            </v-col>
+          </v-row>
 
-        <small class="text-caption text-medium-emphasis"
-          >* - обязательно для заполнения</small
-        >
-      </v-card-text>
+          <small class="text-caption text-medium-emphasis"
+            >* - обязательно для заполнения</small
+          >
+        </v-card-text>
 
-      <v-divider></v-divider>
+        <v-divider></v-divider>
 
-      <v-card-actions>
-        <div class="d-flex flex-wrap mx-auto justify-center">
-          <v-btn
-            text="Отменить"
-            variant="plain"
-            @click="router.push('/')"
-          ></v-btn>
+        <v-card-actions>
+          <div class="d-flex flex-wrap mx-auto justify-center">
+            <v-btn
+              text="Отменить"
+              variant="plain"
+              @click="router.push('/')"
+            ></v-btn>
 
-          <v-btn text="Очистить" variant="plain" @click="handleReset"></v-btn>
-          <v-btn
-            color="primary"
-            text="Добавить"
-            variant="tonal"
-            @click.prevent="onSubmit"
-          ></v-btn>
-        </div>
-      </v-card-actions>
-    </v-form>
-  </v-card>
+            <v-btn text="Очистить" variant="plain" @click="handleReset"></v-btn>
+            <v-btn
+              color="primary"
+              text="Добавить"
+              variant="tonal"
+              @click.prevent="onSubmit"
+            ></v-btn>
+          </div>
+        </v-card-actions>
+      </v-form>
+    </v-card>
+  </div>
 </template>

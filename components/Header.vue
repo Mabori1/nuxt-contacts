@@ -6,6 +6,7 @@ import { useUserStore } from "~/stores/user";
 const { search, users } = storeToRefs(useUserStore());
 const router = useRouter();
 const { mdAndUp } = useDisplay();
+const isHome = computed(() => router.currentRoute.value.path === "/");
 </script>
 <template>
   <div>
@@ -56,6 +57,7 @@ const { mdAndUp } = useDisplay();
         variant="solo"
         hide-details
         class="opacity-40"
+        v-show="isHome"
       ></v-text-field>
       <v-spacer></v-spacer>
     </v-app-bar>
