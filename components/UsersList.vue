@@ -60,45 +60,47 @@ const setItemUsers = () => {
       class="d-flex items-center flex-column"
     >
       <template v-for="(item, i) in items" :key="i">
-        <v-card
-          :color="color"
-          class="mx-auto p-4"
-          min-width="300"
-          max-width="500"
-          border
-          elevation="8"
-        >
-          <v-card-item class="ml-3">
-            <div class="d-flex justify-space-between">
-              Id: {{ item.raw.id }}
+        <div class="d-flex justify-center">
+          <v-card
+            :color="color"
+            class="mx-2 p-4"
+            width="500"
+            border
+            elevation="8"
+          >
+            <v-card-item class="ml-3">
+              <div class="d-flex justify-space-between">
+                Id: {{ item.raw.id }}
 
-              <v-icon
-                @click="router.push('/edit-user/' + item.raw.id)"
-                size="20"
-                color="green"
-                class="ml-auto mr-3"
-                >mdi-pencil</v-icon
-              >
-              <v-icon @click="useUserStore().deleteUser(item.raw)" color="red"
-                >mdi-delete</v-icon
-              >
-            </div>
-            <div class="text-h6">ФИО: {{ item.raw.name }}</div>
-            <div>Phone: {{ item.raw.phone }}</div>
-            <div>
-              Дата рождения:
-              {{
-                new Date(item.raw.birthDate)
-                  .toLocaleString("ru-RU", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  })
-                  .toString()
-              }}
-            </div>
-          </v-card-item>
-        </v-card>
+                <v-icon
+                  @click="router.push('/edit-user/' + item.raw.id)"
+                  size="20"
+                  color="green"
+                  class="ml-auto mr-3"
+                  >mdi-pencil</v-icon
+                >
+                <v-icon @click="useUserStore().deleteUser(item.raw)" color="red"
+                  >mdi-delete</v-icon
+                >
+              </div>
+              <div class="text-h6">ФИО: {{ item.raw.name }}</div>
+              <div>Phone: {{ item.raw.phone }}</div>
+              <div>
+                Дата рождения:
+                {{
+                  new Date(item.raw.birthDate)
+                    .toLocaleString("ru-RU", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })
+                    .toString()
+                }}
+              </div>
+            </v-card-item>
+          </v-card>
+        </div>
+
         <br />
       </template>
     </template>
