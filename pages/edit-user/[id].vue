@@ -1,5 +1,12 @@
 <script setup lang="ts">
 import { useField, useForm } from "vee-validate";
+import type { User } from "~/types";
+
+const router = useRouter();
+const editUser = ref<User | undefined>(undefined);
+editUser.value = useUserStore().users?.find(
+  (user) => user.id === Number(router.currentRoute.value.params.id),
+);
 
 const { handleSubmit, handleReset } = useForm({
   validationSchema: {
@@ -10,12 +17,12 @@ const { handleSubmit, handleReset } = useForm({
       return "ФИО должно содержать минимум 10 символов.";
     },
     phone(value: string) {
-      if (/^[0-9+]{11}$/.test(value)) return true;
+      if (/^[0-9-+]{11,}$/.test(value)) return true;
 
       return "Введите корректный номер телефона.";
     },
     email(value: string) {
-      if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true;
+      if (/^[a-z.-_]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true;
 
       return "Введите корректный адрес почты.";
     },
@@ -26,20 +33,26 @@ const { handleSubmit, handleReset } = useForm({
     },
   },
 });
-const router = useRouter();
-const name = useField<string>("name");
-const phone = useField<number>("phone");
-const email = useField<string>("email");
-const birthday = useField<string>("birthday");
+const name = useField("name");
+const phone = useField("phone");
+const email = useField("email");
+const birthday = useField("birthday");
 
 const { users, isSnackbar, snackbarText } = storeToRefs(useUserStore());
 
+onMounted(() => {
+  name.value.value = editUser.value?.name;
+  phone.value.value = editUser.value?.phone
+    .replace(/^8/, "7")
+    .replace(/[^0-9]/g, "");
+  email.value.value = editUser.value?.email.toLowerCase();
+  birthday.value.value = editUser.value?.birthDate;
+});
+
 const onSubmit = handleSubmit((values) => {
   if (users?.value?.length !== undefined) {
-    const newUser = {
-      id: users.value.length
-        ? Math.max(...users.value.map((user) => user.id)) + 1
-        : 0,
+    const editCurrentUser = {
+      id: +router.currentRoute.value.params.id,
       name: values.name,
       phone: `+${values.phone}`,
       email: values.email,
@@ -52,35 +65,32 @@ const onSubmit = handleSubmit((values) => {
         .toString(),
     };
 
-    useUserStore().addNewUser(newUser);
-
-    snackbarText.value = "Контакт успешно добавлен";
-    isSnackbar.value = true;
-    router.push("/");
+    useUserStore().editUser(editCurrentUser);
   }
+  router.push("/");
+  snackbarText.value = "Контакт успешно отредактирован";
+  isSnackbar.value = true;
 });
 </script>
 <template>
   <div class="d-flex justify-center">
     <v-card
       class="mx-4 px-2"
-      color="blue"
       width="500"
+      color="blue"
       prepend-icon="mdi-account"
-      title="Создание контакта"
-      elevation="8"
+      title="Редактирование контакта"
     >
       <v-form @submit.prevent="onSubmit">
         <v-card-text>
           <v-row dense class="d-flex flex-column">
-            <v-col cols="12" md="12" sm="10">
+            <v-col cols="12" md="12" sm="6">
               <v-text-field
                 v-model="name.value.value"
-                counter="50"
+                :counter="50"
                 :error-messages="name.errorMessage.value"
                 max-width="500"
                 label="ФИО*"
-                placeholder="Алексей Иванович Бояров"
                 required
                 clearable
               ></v-text-field>
@@ -91,28 +101,25 @@ const onSubmit = handleSubmit((values) => {
                 v-model="phone.value.value"
                 :counter="11"
                 :error-messages="phone.errorMessage.value"
-                maxlength="11"
                 type="number"
                 label="Телефон*"
-                placeholder="+79182223344"
                 clearable
                 required
-              ></v-text-field>
+                >+</v-text-field
+              >
             </v-col>
 
             <v-col cols="12" md="8" sm="6">
               <v-text-field
                 v-model="email.value.value"
                 :error-messages="email.errorMessage.value"
-                label="Email*"
                 type="email"
-                hint="Введите адрес электронной почты"
-                placeholder="johndoe@gmail.com"
+                label="Email*"
                 required
               ></v-text-field>
             </v-col>
 
-            <v-col cols="12" md="5" sm="6">
+            <v-col cols="12" md="6" sm="6">
               <v-text-field
                 v-model="birthday.value.value"
                 :counter="10"
@@ -143,7 +150,7 @@ const onSubmit = handleSubmit((values) => {
             <v-btn text="Очистить" variant="plain" @click="handleReset"></v-btn>
             <v-btn
               color="primary"
-              text="Добавить"
+              text="Сохранить"
               variant="tonal"
               @click.prevent="onSubmit"
             ></v-btn>

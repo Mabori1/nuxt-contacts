@@ -3,7 +3,6 @@ import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
 import { useUserStore } from "~/stores/user";
 import type { User } from "~/types";
-import EditUser from "./EditUser.vue";
 
 const color = ref("indigo");
 const {
@@ -17,6 +16,7 @@ const {
 } = storeToRefs(useUserStore());
 const isPaginationVisible = ref(true);
 const itemUsers = ref<User[] | undefined>([]);
+const router = useRouter();
 
 watch(search, (newSearch) => {
   if (newSearch.length > 2) {
@@ -72,7 +72,14 @@ const setItemUsers = () => {
           <v-card-item class="ml-3">
             <div class="d-flex justify-space-between">
               Id: {{ item.raw.id }}
-              <EditUser :edit-user="item.raw" />
+
+              <v-icon
+                @click="router.push('/edit-user/' + item.raw.id)"
+                size="20"
+                color="green"
+                class="ml-auto mr-3"
+                >mdi-pencil</v-icon
+              >
               <v-icon @click="useUserStore().deleteUser(item.raw)" color="red"
                 >mdi-delete</v-icon
               >
