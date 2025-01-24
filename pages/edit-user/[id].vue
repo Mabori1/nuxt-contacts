@@ -27,7 +27,11 @@ const { handleSubmit, handleReset } = useForm({
       return "Введите корректный адрес почты.";
     },
     birthday(value: string) {
-      if (/^[0-9-]{10,}$/.test(value)) return true;
+      if (/^[0-9-]{10,}$/.test(value)) {
+        if (new Date(value) > new Date())
+          return "Дата рождения не может быть в будущем";
+        return true;
+      }
 
       return "Введите корректную дату рождения";
     },
