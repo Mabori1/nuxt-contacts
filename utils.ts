@@ -18,3 +18,23 @@ export const generateUsers = () => {
       .toString(),
   }));
 };
+
+export function phoneMask(inputStr: string) {
+  const strNum = "+7 (___) ___-__-__";
+
+  let charNum = 0;
+  let strValue = inputStr.replace(/\D/g, "");
+
+  inputStr = strNum.replace(/./g, function (str) {
+    if (/[_\d]/.test(str)) {
+      return strValue.charAt(charNum++);
+    } else if (charNum >= strValue.length) {
+      return "";
+    } else {
+      return str;
+    }
+  });
+  console.log(inputStr);
+
+  return inputStr;
+}

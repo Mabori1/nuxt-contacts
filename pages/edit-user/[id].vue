@@ -17,7 +17,7 @@ const { handleSubmit, handleReset } = useForm({
       return "ФИО должно содержать минимум 10 символов.";
     },
     phone(value: string) {
-      if (/^[0-9-+]{11,}$/.test(value)) return true;
+      if (/^[0-9-+\(\)\s]{17}$/.test(value)) return true;
 
       return "Введите корректный номер телефона.";
     },
@@ -33,18 +33,18 @@ const { handleSubmit, handleReset } = useForm({
     },
   },
 });
-const name = useField("name");
-const phone = useField("phone");
-const email = useField("email");
-const birthday = useField("birthday");
+const name = useField<string | undefined>("name");
+const phone = useField<number | undefined>("phone");
+const email = useField<string | undefined>("email");
+const birthday = useField<string | undefined>("birthday");
 
 const { users, isSnackbar, snackbarText } = storeToRefs(useUserStore());
 
 onMounted(() => {
   name.value.value = editUser.value?.name;
-  phone.value.value = editUser.value?.phone
-    .replace(/^8/, "7")
-    .replace(/[^0-9]/g, "");
+  phone.value.value = Number(
+    editUser.value?.phone.replace(/^8/, "7").replace(/[^0-9]/g, ""),
+  );
   email.value.value = editUser.value?.email.toLowerCase();
   birthday.value.value = editUser.value?.birthDate;
 });
@@ -54,7 +54,7 @@ const onSubmit = handleSubmit((values) => {
     const editCurrentUser = {
       id: +router.currentRoute.value.params.id,
       name: values.name,
-      phone: `+${values.phone}`,
+      phone: values.phone,
       email: values.email,
       birthDate: new Date(values.birthday)
         .toLocaleString("lt", {
@@ -98,15 +98,14 @@ const onSubmit = handleSubmit((values) => {
 
             <v-col cols="12" md="8" sm="6">
               <v-text-field
+                v-maska="'+7(###) ###-##-##'"
                 v-model="phone.value.value"
-                :counter="11"
+                :counter="17"
                 :error-messages="phone.errorMessage.value"
-                type="number"
                 label="Телефон*"
                 clearable
                 required
-                >+</v-text-field
-              >
+              ></v-text-field>
             </v-col>
 
             <v-col cols="12" md="8" sm="6">

@@ -10,7 +10,7 @@ const { handleSubmit, handleReset } = useForm({
       return "ФИО должно содержать минимум 10 символов.";
     },
     phone(value: string) {
-      if (/^[0-9+]{11}$/.test(value)) return true;
+      if (/^[0-9-+\s\(\)]{17}$/.test(value)) return true;
 
       return "Введите корректный номер телефона.";
     },
@@ -28,11 +28,11 @@ const { handleSubmit, handleReset } = useForm({
 });
 const router = useRouter();
 const name = useField<string>("name");
-const phone = useField<number>("phone");
+const phone = useField<string>("phone");
 const email = useField<string>("email");
 const birthday = useField<string>("birthday");
 
-const { users, isSnackbar, snackbarText } = storeToRefs(useUserStore());
+const { users, page, isSnackbar, snackbarText } = storeToRefs(useUserStore());
 
 const onSubmit = handleSubmit((values) => {
   if (users?.value?.length !== undefined) {
@@ -41,7 +41,7 @@ const onSubmit = handleSubmit((values) => {
         ? Math.max(...users.value.map((user) => user.id)) + 1
         : 0,
       name: values.name,
-      phone: `+${values.phone}`,
+      phone: values.phone,
       email: values.email,
       birthDate: new Date(values.birthday)
         .toLocaleString("lt", {
@@ -56,6 +56,7 @@ const onSubmit = handleSubmit((values) => {
 
     snackbarText.value = "Контакт успешно добавлен";
     isSnackbar.value = true;
+    page.value = Math.ceil(users.value.length / 5);
     router.push("/");
   }
 });
@@ -88,13 +89,12 @@ const onSubmit = handleSubmit((values) => {
 
             <v-col cols="12" md="8" sm="6">
               <v-text-field
+                v-maska="'+7(###) ###-##-##'"
                 v-model="phone.value.value"
-                :counter="11"
+                counter="17"
                 :error-messages="phone.errorMessage.value"
-                maxlength="11"
-                type="number"
                 label="Телефон*"
-                placeholder="+79182223344"
+                placeholder="+7(918) 222-33-44"
                 clearable
                 required
               ></v-text-field>
