@@ -9,13 +9,12 @@ export const generateUsers = () => {
       .number({ style: "national" })
       .toString()
       .replace(/^8/, "+7"),
-    birthDate: new Date(faker.date.birthdate())
-      .toLocaleString("lt", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      })
-      .toString(),
+    birthDate: new Date(faker.date.birthdate()),
+    // .toLocaleString("lt", {
+    //   year: "numeric",
+    //   month: "2-digit",
+    //   day: "2-digit",
+    // }),
   }));
 };
 

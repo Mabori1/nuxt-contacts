@@ -46,7 +46,11 @@ onMounted(() => {
     editUser.value?.phone.replace(/^8/, "7").replace(/[^0-9]/g, ""),
   );
   email.value.value = editUser.value?.email.toLowerCase();
-  birthday.value.value = editUser.value?.birthDate;
+  birthday.value.value = editUser.value?.birthDate.toLocaleString("lt", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
 });
 
 const onSubmit = handleSubmit((values) => {
@@ -56,13 +60,7 @@ const onSubmit = handleSubmit((values) => {
       name: values.name,
       phone: values.phone,
       email: values.email,
-      birthDate: new Date(values.birthday)
-        .toLocaleString("lt", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        })
-        .toString(),
+      birthDate: new Date(values.birthday),
     };
 
     useUserStore().editUser(editCurrentUser);

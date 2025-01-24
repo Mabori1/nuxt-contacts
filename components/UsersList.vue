@@ -24,8 +24,7 @@ watch(search, (newSearch) => {
       (user: User) =>
         user.name.toLowerCase().includes(newSearch.toLowerCase()) ||
         user.email.toLowerCase().includes(newSearch.toLowerCase()) ||
-        user.phone.toLowerCase().includes(newSearch.toLowerCase()) ||
-        user.birthDate.toLowerCase().includes(newSearch.toLowerCase()),
+        user.phone.toLowerCase().includes(newSearch.toLowerCase()),
     );
     setItemUsers();
   }

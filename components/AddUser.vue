@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useField, useForm } from "vee-validate";
+import type { User } from "~/types";
 
 const { handleSubmit, handleReset } = useForm({
   validationSchema: {
@@ -30,26 +31,25 @@ const router = useRouter();
 const name = useField<string>("name");
 const phone = useField<string>("phone");
 const email = useField<string>("email");
-const birthday = useField<string>("birthday");
+const birthday = useField<Date>("birthday");
 
 const { users, page, isSnackbar, snackbarText } = storeToRefs(useUserStore());
 
 const onSubmit = handleSubmit((values) => {
   if (users?.value?.length !== undefined) {
-    const newUser = {
+    const newUser: User = {
       id: users.value.length
         ? Math.max(...users.value.map((user) => user.id)) + 1
         : 0,
       name: values.name,
       phone: values.phone,
       email: values.email,
-      birthDate: new Date(values.birthday)
-        .toLocaleString("lt", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        })
-        .toString(),
+      birthDate: new Date(values.birthday),
+      // birthDate: new Date(values.birthday).toLocaleString("lt", {
+      //   year: "numeric",
+      //   month: "2-digit",
+      //   day: "2-digit",
+      // }),
     };
 
     useUserStore().addNewUser(newUser);
