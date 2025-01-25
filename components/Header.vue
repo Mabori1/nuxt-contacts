@@ -33,7 +33,7 @@ const isHome = computed(() => router.currentRoute.value.path === "/");
         prepend-icon="mdi-account"
         text="Добавить контакт"
         variant="flat"
-        color="primary"
+        color="light-blue-darken-2"
         @click="router.push('/create-user')"
       ></v-btn>
 
@@ -43,7 +43,7 @@ const isHome = computed(() => router.currentRoute.value.path === "/");
         prepend-icon="mdi-account"
         text="+"
         variant="flat"
-        color="primary"
+        color="light-blue-darken-2"
         @click="router.push('/create-user')"
       ></v-btn>
 

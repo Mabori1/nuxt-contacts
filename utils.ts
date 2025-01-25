@@ -1,21 +1,33 @@
 import { fakerRU as faker } from "@faker-js/faker";
+import type { User } from "./types";
 
 export const generateUsers = () => {
-  return Array.from({ length: 100 }, (_, v) => ({
-    id: v + 1,
-    name: faker.person.fullName(),
-    email: faker.internet.email(),
-    phone: faker.phone
-      .number({ style: "national" })
-      .toString()
-      .replace(/^8/, "+7"),
-    birthDate: new Date(faker.date.birthdate()),
-    // .toLocaleString("lt", {
-    //   year: "numeric",
-    //   month: "2-digit",
-    //   day: "2-digit",
-    // }),
-  }));
+  const dataArray: User[] = [];
+
+  for (let i = 0; i < 100; i++) {
+    const sex: "male" | "female" = faker.helpers.arrayElement([
+      "male",
+      "female",
+    ]);
+
+    dataArray[i] = {
+      id: i + 1,
+      name: faker.person.fullName({ sex }),
+      avatarUrl: `https://xsgames.co/randomusers/avatar.php?g=${sex}`,
+      email: faker.internet.email(),
+      phone: faker.phone
+        .number({ style: "national" })
+        .toString()
+        .replace(/^8/, "+7"),
+      birthDate: new Date(faker.date.birthdate()),
+      // .toLocaleString("lt", {
+      //   year: "numeric",
+      //   month: "2-digit",
+      //   day: "2-digit",
+      // }),
+    };
+  }
+  return dataArray;
 };
 
 export function phoneMask(inputStr: string) {

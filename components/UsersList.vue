@@ -3,6 +3,7 @@ import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
 import { useUserStore } from "~/stores/user";
 import type { User } from "~/types";
+import UserDialog from "./UserDialog.vue";
 
 const color = ref("indigo");
 const {
@@ -72,11 +73,13 @@ const setItemUsers = () => {
               <div class="d-flex justify-space-between">
                 Id: {{ item.raw.id }}
 
+                <UserDialog class="ml-auto mr-3" :current-user="item.raw" />
+
                 <v-icon
                   @click="router.push('/edit-user/' + item.raw.id)"
                   size="20"
                   color="green"
-                  class="ml-auto mr-3"
+                  class="mx-3"
                   >mdi-pencil</v-icon
                 >
                 <v-icon @click="useUserStore().deleteUser(item.raw)" color="red"

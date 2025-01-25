@@ -25,7 +25,6 @@ const router = useRouter();
         title="Техническое задание"
         @click="router.push('/tz')"
       ></v-list-item>
-      <v-list-item link title="List Item 3"></v-list-item>
     </v-navigation-drawer>
   </v-container>
 </template>
