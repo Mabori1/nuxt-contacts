@@ -116,6 +116,7 @@ const onSubmit = handleSubmit((values) => {
                 :error-messages="email.errorMessage.value"
                 type="email"
                 label="Email*"
+                clearable
                 required
               ></v-text-field>
             </v-col>
@@ -140,22 +141,26 @@ const onSubmit = handleSubmit((values) => {
 
         <v-divider></v-divider>
 
-        <v-card-actions>
-          <div class="d-flex flex-wrap mx-auto justify-center">
-            <v-btn
-              text="Отменить"
-              variant="plain"
-              @click="router.push('/')"
-            ></v-btn>
-
-            <v-btn text="Очистить" variant="plain" @click="handleReset"></v-btn>
-            <v-btn
-              color="primary"
-              text="Сохранить"
-              variant="tonal"
-              @click.prevent="onSubmit"
-            ></v-btn>
-          </div>
+        <v-card-actions class="d-flex gap-2 flex-wrap mx-auto justify-center">
+          <v-btn
+            text="Отменить"
+            variant="tonal"
+            @click="router.push('/')"
+            class="text-white"
+          ></v-btn>
+          <v-btn
+            class="text-white"
+            text="Очистить"
+            variant="tonal"
+            @click="handleReset"
+          ></v-btn>
+          <v-btn
+            color="primary"
+            text="Сохранить"
+            variant="tonal"
+            class="text-white"
+            @click.prevent="onSubmit"
+          ></v-btn>
         </v-card-actions>
       </v-form>
     </v-card>

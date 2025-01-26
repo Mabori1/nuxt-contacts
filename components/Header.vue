@@ -19,9 +19,10 @@ const isHome = computed(() => router.currentRoute.value.path === "/");
     >
       <v-app-bar-nav-icon
         @click="useUserStore().toggleDrawer"
+        color="white"
       ></v-app-bar-nav-icon>
 
-      <v-toolbar-title>
+      <v-toolbar-title class="text-white">
         {{
           mdAndUp ? `Контакты: ${users?.length}` : users?.length
         }}</v-toolbar-title

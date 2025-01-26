@@ -70,19 +70,23 @@ const setItemUsers = () => {
             elevation="8"
           >
             <v-card-item class="ml-3">
-              <div class="d-flex justify-space-between">
+              <div class="d-flex justify-space-between align-center">
                 Id: {{ item.raw.id }}
 
-                <UserDialog class="ml-auto mr-3" :current-user="item.raw" />
+                <UserDialog class="ml-auto" :current-user="item.raw" />
 
                 <v-icon
                   @click="router.push('/edit-user/' + item.raw.id)"
-                  size="20"
+                  size="28"
                   color="green"
-                  class="mx-3"
-                  >mdi-pencil</v-icon
+                  class="mx-1"
+                  >mdi-account-edit</v-icon
                 >
-                <v-icon @click="useUserStore().deleteUser(item.raw)" color="red"
+                <v-icon
+                  class="ml-2"
+                  size="28"
+                  @click="useUserStore().deleteUser(item.raw)"
+                  color="red"
                   >mdi-delete</v-icon
                 >
               </div>
@@ -91,7 +95,7 @@ const setItemUsers = () => {
               <div>
                 Дата рождения:
                 {{
-                  new Date(item.raw.birthDate)
+                  new Date(item.raw.birthday)
                     .toLocaleString("ru-RU", {
                       day: "2-digit",
                       month: "2-digit",

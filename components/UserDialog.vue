@@ -17,19 +17,21 @@ dialog.value = false;
         <v-icon color="green" v-bind="activatorProps">mdi-account</v-icon>
       </template>
       <v-row>
-        <v-col cols="12" md="8">
+        <v-col cols="12" md="10">
           <v-card color="light-blue-lighten-2" elevation="8">
             <v-card-item class="d-flex justify-center">
               <div class="mx-auto">
                 <v-avatar :image="currentUser.avatarUrl" size="150"></v-avatar>
               </div>
             </v-card-item>
-            <v-card-title>{{ currentUser.name }}</v-card-title>
+            <v-card-title class="text-h6 text-lg-h5 text-wrap">
+              {{ currentUser.name }}
+            </v-card-title>
             <v-card-item>
               <div>телефон: {{ currentUser.phone }}</div>
               <div>email: {{ currentUser.email.toLowerCase() }}</div>
               <div>
-                дата рождения: {{ currentUser.birthDate.toLocaleDateString() }}
+                дата рождения: {{ currentUser.birthday.toLocaleDateString() }}
               </div>
             </v-card-item>
           </v-card>
